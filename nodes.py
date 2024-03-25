@@ -141,7 +141,6 @@ class champ_model_loader:
         return {"required": {
             "model": ("MODEL",),
             "vae": ("VAE",),
-            "ckpt_name": (folder_paths.get_filename_list("checkpoints"), ),
             "diffusion_dtype": (
                     [
                         'fp32',
@@ -168,7 +167,7 @@ class champ_model_loader:
     FUNCTION = "loadmodel"
     CATEGORY = "champWrapper"
 
-    def loadmodel(self, model, vae, diffusion_dtype, vae_dtype, ckpt_name):
+    def loadmodel(self, model, vae, diffusion_dtype, vae_dtype):
         mm.soft_empty_cache()
         device = mm.get_torch_device()
         config_path = os.path.join(script_directory, "configs/inference.yaml")
@@ -177,7 +176,6 @@ class champ_model_loader:
         custom_config = {
             'diffusion_dtype': diffusion_dtype,
             'vae_dtype': vae_dtype,
-            'ckpt_name': ckpt_name,
             'model': model,
             'vae': vae
         }
