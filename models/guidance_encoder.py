@@ -8,10 +8,10 @@ from diffusers.models.modeling_utils import ModelMixin
 from diffusers.utils import BaseOutput
 from dataclasses import dataclass
 
-from models.motion_module import zero_module
-from models.resnet import InflatedConv3d, InflatedGroupNorm
-from models.attention import TemporalBasicTransformerBlock
-from models.transformer_3d import Transformer3DModel
+from .motion_module import zero_module
+from .resnet import InflatedConv3d, InflatedGroupNorm
+from .attention import TemporalBasicTransformerBlock
+from .transformer_3d import Transformer3DModel
     
     
 class GuidanceEncoder(ModelMixin):

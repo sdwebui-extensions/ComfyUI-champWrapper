@@ -1,6 +1,6 @@
 exp_name: Animation
-width: 512
-height: 512
+width: 384
+height: 384
 data:
   ref_image_path: 'example_data/ref_images/ref-01.png'  # reference image path
   guidance_data_folder: 'example_data/motions/motion-01'  # corrsponding motion sequence folder

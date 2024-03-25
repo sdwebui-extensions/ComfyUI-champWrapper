@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from models.unet_2d_condition import UNet2DConditionModel
-from models.unet_3d import UNet3DConditionModel    
+from .unet_2d_condition import UNet2DConditionModel
+from .unet_3d import UNet3DConditionModel    
 
 
 class ChampModel(nn.Module):

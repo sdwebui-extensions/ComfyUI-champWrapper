@@ -22,9 +22,9 @@ from einops import rearrange
 from tqdm import tqdm
 from transformers import CLIPImageProcessor
 
-from models.mutual_self_attention import ReferenceAttentionControl
-from pipelines.context import get_context_scheduler
-from pipelines.pipe_utils import get_tensor_interpolation_method
+from ..models.mutual_self_attention import ReferenceAttentionControl
+from .context import get_context_scheduler
+from .pipe_utils import get_tensor_interpolation_method
 
 
 @dataclass
