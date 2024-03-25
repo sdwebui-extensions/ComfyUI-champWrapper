@@ -11,6 +11,9 @@ And this model along with it's config go in the `ComfyUI/custom_nodes/ComfyUI-ch
 
 https://huggingface.co/lambdalabs/sd-image-variations-diffusers/tree/main/image_encoder
 
+
+# Original repo:
+
 <h1 align='Center'>Champ: Controllable and Consistent Human Image Animation with 3D Parametric Guidance</h1>
 
 <div align='Center'>
