@@ -3,6 +3,13 @@
 
 ![image](https://github.com/kijai/ComfyUI-champWrapper/assets/40791699/cacc7067-19ec-4292-a809-7f3a2b660d1c)
 
+These checkpoints go in the `ComfyUI/custom_nodes/ComfyUI-champWrapper/checkpoints` -folder:
+
+https://drive.google.com/drive/folders/1hZiOHG-qDf0Pj7tvfxC70JQ6wHUvUDoY
+
+And this model along with it's config go in the `ComfyUI/custom_nodes/ComfyUI-champWrapper/checkpoints/image_encoder`:
+
+https://huggingface.co/lambdalabs/sd-image-variations-diffusers/tree/main/image_encoder
 
 <h1 align='Center'>Champ: Controllable and Consistent Human Image Animation with 3D Parametric Guidance</h1>
 
