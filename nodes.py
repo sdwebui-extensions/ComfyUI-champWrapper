@@ -14,7 +14,7 @@ from contextlib import contextmanager, nullcontext
 from omegaconf import OmegaConf
 from PIL import Image
 from transformers import CLIPVisionModelWithProjection
-
+from torchvision.transforms import ToPILImage
 from .models.unet_2d_condition import UNet2DConditionModel
 from .models.unet_3d import UNet3DConditionModel
 from .models.mutual_self_attention import ReferenceAttentionControl
@@ -98,7 +98,41 @@ def combine_guidance_data(cfg, max_files_per_type=None):
     assert all(len(sublist) == first_guidance_length for sublist in list(guidance_pil_group.values()))
     
     return guidance_pil_group, first_guidance_length
-    
+
+def combine_guidance_data_from_tensors(cfg, guidance_tensor_batches, max_files_per_type=None):
+    guidance_types = cfg.guidance_types
+    guidance_pil_group = {guidance_type: [] for guidance_type in guidance_types}
+    to_pil = ToPILImage()
+
+    for guidance_type in guidance_types:
+        # Ensure guidance_tensor_batches contains the necessary keys
+        if guidance_type not in guidance_tensor_batches:
+            raise ValueError(f"Missing guidance type '{guidance_type}' in guidance_tensor_batches.")
+
+        tensor_batch = guidance_tensor_batches[guidance_type]
+        for i in range(tensor_batch.size(0)):  # Iterate over the batch
+           
+            tensor = tensor_batch[i]
+
+            # Permute the tensor from B, H, W, C to B, C, H, W
+            tensor = tensor.permute(2, 0, 1)
+
+            # Convert tensor to PIL Image
+            pil_image = to_pil(tensor)
+
+            # Add the PIL Image to the group
+            guidance_pil_group[guidance_type].append(pil_image)
+
+            # Limit the number of tensors processed for each guidance type
+            if max_files_per_type is not None and len(guidance_pil_group[guidance_type]) >= max_files_per_type:
+                break
+
+    # Get video length from the first guidance sequence
+    first_guidance_length = len(guidance_pil_group[next(iter(guidance_types))])
+    # Ensure all guidance sequences are of equal length
+    assert all(len(sublist) == first_guidance_length for sublist in guidance_pil_group.values())
+
+    return guidance_pil_group, first_guidance_length
 
 
 class champ_model_loader:
@@ -126,7 +160,6 @@ class champ_model_loader:
                     ], {
                         "default": 'auto'
                     }),
-            "fp8_unet": ("BOOLEAN", {"default": False}),
             },
         }
 
@@ -135,7 +168,7 @@ class champ_model_loader:
     FUNCTION = "loadmodel"
     CATEGORY = "champWrapper"
 
-    def loadmodel(self, model, vae, diffusion_dtype, vae_dtype, ckpt_name, fp8_unet=False):
+    def loadmodel(self, model, vae, diffusion_dtype, vae_dtype, ckpt_name):
         mm.soft_empty_cache()
         device = mm.get_torch_device()
         config_path = os.path.join(script_directory, "configs/inference.yaml")
@@ -145,7 +178,6 @@ class champ_model_loader:
             'diffusion_dtype': diffusion_dtype,
             'vae_dtype': vae_dtype,
             'ckpt_name': ckpt_name,
-            'fp8_unet': fp8_unet,
             'model': model,
             'vae': vae
         }
@@ -175,8 +207,6 @@ class champ_model_loader:
             reference_unet_path = os.path.join(script_directory,"checkpoints", "reference_unet.pth")
             motion_module_path = os.path.join(script_directory,"checkpoints", "motion_module.pth")
             
-            image_enc = CLIPVisionModelWithProjection.from_pretrained(os.path.join(script_directory,"checkpoints", "image_encoder"))
-            image_enc.to(dtype).to(device)
             from diffusers.loaders.single_file_utils import (convert_ldm_vae_checkpoint, convert_ldm_unet_checkpoint, create_text_encoder_from_ldm_clip_checkpoint, create_vae_diffusers_config, create_unet_diffusers_config)
             
             mm.load_model_gpu(model)
@@ -185,19 +215,19 @@ class champ_model_loader:
             # 1. vae
             converted_vae_config = create_vae_diffusers_config(original_config, image_size=512)
             converted_vae = convert_ldm_vae_checkpoint(sd, converted_vae_config)
-            vae = AutoencoderKL(**converted_vae_config)
-            vae.load_state_dict(converted_vae, strict=False)
+            self.vae = AutoencoderKL(**converted_vae_config)
+            self.vae.load_state_dict(converted_vae, strict=False)
             if vae_dtype == "auto":
                 try:
                     if mm.should_use_bf16():
-                        vae.to(convert_dtype('bf16'))
+                        self.vae.to(convert_dtype('bf16'))
                     else:
-                        vae.to(convert_dtype('fp32'))
+                        self.vae.to(convert_dtype('fp32'))
                 except:
                     raise AttributeError("ComfyUI version too old, can't autodetect properly. Set your dtype manually.")
             else:
-                vae.to(convert_dtype(vae_dtype))
-            print(f"VAE using dtype: {vae.dtype}")
+                self.vae.to(convert_dtype(vae_dtype))
+            print(f"VAE using dtype: {self.vae.dtype}")
 
             # 2. unet
             converted_unet_config = create_unet_diffusers_config(original_config, image_size=512)
@@ -255,8 +285,13 @@ class champ_model_loader:
             if mm.XFORMERS_IS_AVAILABLE:
                 reference_unet.enable_xformers_memory_efficient_attention()
                 denoising_unet.enable_xformers_memory_efficient_attention()
+
+        if not hasattr(self, 'image_enc') or self.image_enc == None:
+            self.image_enc = CLIPVisionModelWithProjection.from_pretrained(os.path.join(script_directory,"checkpoints", "image_encoder"))
+            self.image_enc.to(dtype).to(device)
+        
    
-        return (self.model, vae, image_enc)
+        return (self.model, self.vae, self.image_enc)
     
 class champ_sampler:
     @classmethod
@@ -266,6 +301,10 @@ class champ_sampler:
             "champ_vae": ("CHAMPVAE",),
             "champ_encoder": ("CHAMPENCODER",),
             "image": ("IMAGE",),
+            "depth_tensors": ("IMAGE",),
+            "normal_tensors": ("IMAGE",),
+            "semantic_tensors": ("IMAGE",),
+            "dwpose_tensors": ("IMAGE",),
             "width": ("INT", {"default": 512, "min": 64, "max": 2048, "step": 64}),
             "height": ("INT", {"default": 512, "min": 64, "max": 2048, "step": 64}),
             "steps": ("INT", {"default": 20, "min": 1, "max": 200, "step": 1}),
@@ -273,7 +312,6 @@ class champ_sampler:
             "frames": ("INT", {"default": 16, "min": 1, "max": 100, "step": 1}),
             "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
             "keep_model_loaded": ("BOOLEAN", {"default": True}),
-            
             },
     
         }
@@ -283,7 +321,7 @@ class champ_sampler:
     FUNCTION = "process"
     CATEGORY = "champWrapper"
 
-    def process(self, champ_model, champ_vae, champ_encoder, image, width, height, guidance_scale, steps, seed, keep_model_loaded, frames):
+    def process(self, champ_model, champ_vae, champ_encoder, image, depth_tensors, normal_tensors, semantic_tensors, dwpose_tensors, width, height, guidance_scale, steps, seed, keep_model_loaded, frames):
         device = mm.get_torch_device()
         mm.unload_all_models()
         mm.soft_empty_cache()
@@ -327,8 +365,16 @@ class champ_sampler:
             ref_image_pil = to_pil(image[0])
             ref_image_w, ref_image_h = ref_image_pil.size
             
-            guidance_pil_group, video_length = combine_guidance_data(cfg, max_files_per_type=frames)
-            
+            #guidance_pil_group, video_length = combine_guidance_data(cfg, max_files_per_type=frames)
+            guidance_tensor_batches = {
+                "depth": depth_tensors,
+                "normal": normal_tensors,
+                "semantic_map": semantic_tensors,
+                "dwpose": dwpose_tensors
+                # ... similarly for other guidance types
+            }
+            guidance_pil_group, video_length = combine_guidance_data_from_tensors(cfg, guidance_tensor_batches, max_files_per_type=frames)
+
             result_video_tensor = inference(
                 cfg=cfg,
                 vae=vae,
@@ -343,11 +389,10 @@ class champ_sampler:
                 guidance_scale=guidance_scale,
                 device=device, dtype=dtype
             )  # (1, c, f, h, w)
-            print(result_video_tensor.shape)
-            print(result_video_tensor.min(), result_video_tensor.max())
+            
             result_video_tensor = result_video_tensor.squeeze(0)
             result_video_tensor = result_video_tensor.permute(1, 2, 3, 0).cpu()
-            print(result_video_tensor.shape)
+
             return (result_video_tensor,)
 def inference(
     cfg,

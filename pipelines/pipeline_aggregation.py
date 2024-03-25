@@ -469,6 +469,8 @@ class MultiGuidance2LongVideoPipeline(DiffusionPipeline):
 
         # denoising loop
         num_warmup_steps = len(timesteps) - num_inference_steps * self.scheduler.order
+        import comfy.utils
+        pbar = comfy.utils.ProgressBar(num_inference_steps)
         with self.progress_bar(total=num_inference_steps) as progress_bar:
             for i, t in enumerate(timesteps):
                 noise_pred = torch.zeros(
@@ -572,6 +574,7 @@ class MultiGuidance2LongVideoPipeline(DiffusionPipeline):
                     (i + 1) > num_warmup_steps and (i + 1) % self.scheduler.order == 0
                 ):
                     progress_bar.update()
+                    pbar.update(1)
                     if callback is not None and i % callback_steps == 0:
                         step_idx = i // getattr(self.scheduler, "order", 1)
                         callback(step_idx, t, latents)
