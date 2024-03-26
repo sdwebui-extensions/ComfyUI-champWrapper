@@ -25,6 +25,7 @@ from .pipelines.pipeline_aggregation import MultiGuidance2LongVideoPipeline
 
 from .utils.video_utils import resize_tensor_frames, save_videos_grid, pil_list_to_tensor
 import comfy.model_management as mm
+import comfy.utils
 import folder_paths
 
 def convert_dtype(dtype_str):
@@ -180,6 +181,7 @@ class champ_model_loader:
             'vae': vae
         }
         if not hasattr(self, 'model') or self.model == None or custom_config != self.current_config:
+            pbar = comfy.utils.ProgressBar(7)
             self.current_config = custom_config
             # setup pretrained models
             original_config = OmegaConf.load(os.path.join(script_directory, f"configs/v1-inference.yaml"))
@@ -226,19 +228,19 @@ class champ_model_loader:
             else:
                 self.vae.to(convert_dtype(vae_dtype))
             print(f"VAE using dtype: {self.vae.dtype}")
-
+            pbar.update(1)
             # 2. unet
             converted_unet_config = create_unet_diffusers_config(original_config, image_size=512)
             converted_unet = convert_ldm_unet_checkpoint(sd, converted_unet_config)
             del sd
             reference_unet = UNet2DConditionModel(**converted_unet_config)
             reference_unet.load_state_dict(converted_unet, strict=False)
-
+            pbar.update(1)
             denoising_unet = UNet3DConditionModel(**ad_unet_config)
             denoising_unet.load_state_dict(converted_unet, strict=False)
-
+            pbar.update(1)
             motion_state_dict = torch.load(motion_module_path, map_location="cpu", weights_only=True)
-            
+            pbar.update(1)
             denoising_unet.load_state_dict(motion_state_dict, strict=False)
             del motion_state_dict
             
@@ -246,10 +248,10 @@ class champ_model_loader:
             
             denoising_unet.load_state_dict(torch.load(denoising_unet_path, map_location="cpu"), strict=False)
             reference_unet.load_state_dict(torch.load(reference_unet_path, map_location="cpu"), strict=False)
-           
+
             denoising_unet.to(dtype).to(device)
             reference_unet.to(dtype).to(device)
-
+            pbar.update(1)
             for guidance_type, guidance_encoder_module in guidance_encoder_group.items():
                 guidance_encoder_module.load_state_dict(
                     torch.load(
@@ -258,7 +260,7 @@ class champ_model_loader:
                     ),
                     strict=False,
                 )
-                
+            pbar.update(1)
             reference_control_writer = ReferenceAttentionControl(
                 reference_unet,
                 do_classifier_free_guidance=False,
@@ -279,7 +281,7 @@ class champ_model_loader:
                 reference_control_reader=reference_control_reader,
                 guidance_encoder_group=guidance_encoder_group,
             ).to(device, dtype=dtype)
-            
+            pbar.update(1)
             if mm.XFORMERS_IS_AVAILABLE:
                 reference_unet.enable_xformers_memory_efficient_attention()
                 denoising_unet.enable_xformers_memory_efficient_attention()
