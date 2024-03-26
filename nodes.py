@@ -92,7 +92,7 @@ def combine_guidance_data(cfg, max_files_per_type=None):
             # Limit the number of files processed for each guidance type
             if max_files_per_type is not None and len(guidance_pil_group[guidance_type]) >= max_files_per_type:
                 break
-    
+
     # get video length from the first guidance sequence
     first_guidance_length = len(list(guidance_pil_group.values())[0])
     # ensure all guidance sequences are of equal length
@@ -100,17 +100,12 @@ def combine_guidance_data(cfg, max_files_per_type=None):
     
     return guidance_pil_group, first_guidance_length
 
-def combine_guidance_data_from_tensors(cfg, guidance_tensor_batches, max_files_per_type=None):
-    guidance_types = cfg.guidance_types
-    guidance_pil_group = {guidance_type: [] for guidance_type in guidance_types}
+def combine_guidance_data_from_tensors(guidance_tensor_batches):
+    guidance_pil_group = {}
     to_pil = ToPILImage()
 
-    for guidance_type in guidance_types:
-        # Ensure guidance_tensor_batches contains the necessary keys
-        if guidance_type not in guidance_tensor_batches:
-            raise ValueError(f"Missing guidance type '{guidance_type}' in guidance_tensor_batches.")
-
-        tensor_batch = guidance_tensor_batches[guidance_type]
+    for guidance_type, tensor_batch in guidance_tensor_batches.items():
+        guidance_pil_group[guidance_type] = []
         for i in range(tensor_batch.size(0)):  # Iterate over the batch
            
             tensor = tensor_batch[i]
@@ -118,18 +113,15 @@ def combine_guidance_data_from_tensors(cfg, guidance_tensor_batches, max_files_p
             # Permute the tensor from B, H, W, C to B, C, H, W
             tensor = tensor.permute(2, 0, 1)
 
+
             # Convert tensor to PIL Image
             pil_image = to_pil(tensor)
 
             # Add the PIL Image to the group
             guidance_pil_group[guidance_type].append(pil_image)
 
-            # Limit the number of tensors processed for each guidance type
-            if max_files_per_type is not None and len(guidance_pil_group[guidance_type]) >= max_files_per_type:
-                break
-
     # Get video length from the first guidance sequence
-    first_guidance_length = len(guidance_pil_group[next(iter(guidance_types))])
+    first_guidance_length = len(guidance_pil_group[next(iter(guidance_tensor_batches.keys()))])
     # Ensure all guidance sequences are of equal length
     assert all(len(sublist) == first_guidance_length for sublist in guidance_pil_group.values())
 
@@ -312,10 +304,6 @@ class champ_sampler:
             "champ_vae": ("CHAMPVAE",),
             "champ_encoder": ("CHAMPENCODER",),
             "image": ("IMAGE",),
-            "depth_tensors": ("IMAGE",),
-            "normal_tensors": ("IMAGE",),
-            "semantic_tensors": ("IMAGE",),
-            "dwpose_tensors": ("IMAGE",),
             "width": ("INT", {"default": 512, "min": 64, "max": 2048, "step": 64}),
             "height": ("INT", {"default": 512, "min": 64, "max": 2048, "step": 64}),
             "steps": ("INT", {"default": 20, "min": 1, "max": 200, "step": 1}),
@@ -325,6 +313,10 @@ class champ_sampler:
             "keep_model_loaded": ("BOOLEAN", {"default": True}),
             },
             "optional":{
+            "depth_tensors": ("IMAGE",),
+            "normal_tensors": ("IMAGE",),
+            "semantic_tensors": ("IMAGE",),
+            "dwpose_tensors": ("IMAGE",),
             "scheduler": (
                 [
                     'DDIMScheduler',
@@ -344,8 +336,8 @@ class champ_sampler:
     FUNCTION = "process"
     CATEGORY = "champWrapper"
 
-    def process(self, champ_model, champ_vae, champ_encoder, image, depth_tensors, normal_tensors, semantic_tensors, dwpose_tensors, width, height, 
-                guidance_scale, steps, seed, keep_model_loaded, frames, scheduler='DDIMScheduler'):
+    def process(self, champ_model, champ_vae, champ_encoder, image, width, height, 
+                guidance_scale, steps, seed, keep_model_loaded, frames, depth_tensors=None, normal_tensors=None, semantic_tensors=None, dwpose_tensors=None, scheduler='DDIMScheduler'):
         device = mm.get_torch_device()
         mm.unload_all_models()
         mm.soft_empty_cache()
@@ -403,17 +395,18 @@ class champ_sampler:
             
             to_pil = transforms.ToPILImage()
             ref_image_pil = to_pil(image[0])
-            ref_image_w, ref_image_h = ref_image_pil.size
-            
-            #guidance_pil_group, video_length = combine_guidance_data(cfg, max_files_per_type=frames)
-            guidance_tensor_batches = {
-                "depth": depth_tensors,
-                "normal": normal_tensors,
-                "semantic_map": semantic_tensors,
-                "dwpose": dwpose_tensors
-                # ... similarly for other guidance types
-            }
-            guidance_pil_group, video_length = combine_guidance_data_from_tensors(cfg, guidance_tensor_batches, max_files_per_type=frames)
+
+            guidance_tensor_batches = {}
+            if depth_tensors is not None:
+                guidance_tensor_batches["depth"] = depth_tensors
+            if normal_tensors is not None:
+                guidance_tensor_batches["normal"] = normal_tensors
+            if semantic_tensors is not None:
+                guidance_tensor_batches["semantic_map"] = semantic_tensors
+            if dwpose_tensors is not None:
+                guidance_tensor_batches["dwpose"] = dwpose_tensors
+                
+            guidance_pil_group, video_length = combine_guidance_data_from_tensors(guidance_tensor_batches)
 
             result_video_tensor = inference(
                 cfg=cfg,
