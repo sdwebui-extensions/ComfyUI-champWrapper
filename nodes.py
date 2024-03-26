@@ -141,6 +141,7 @@ class champ_model_loader:
     def INPUT_TYPES(s):
         return {"required": {
             "model": ("MODEL",),
+            
             "vae": ("VAE",),
             "diffusion_dtype": (
                     [
@@ -161,6 +162,9 @@ class champ_model_loader:
                         "default": 'auto'
                     }),
             },
+            "optional": {
+                "motion_model":("MOTION_MODEL_ADE",),
+            }
         }
 
     RETURN_TYPES = ("CHAMPMODEL", "CHAMPVAE", "CHAMPENCODER")
@@ -168,7 +172,7 @@ class champ_model_loader:
     FUNCTION = "loadmodel"
     CATEGORY = "champWrapper"
 
-    def loadmodel(self, model, vae, diffusion_dtype, vae_dtype):
+    def loadmodel(self, model, vae, diffusion_dtype, vae_dtype, motion_model=None):
         mm.soft_empty_cache()
         device = mm.get_torch_device()
         config_path = os.path.join(script_directory, "configs/inference.yaml")
@@ -178,7 +182,8 @@ class champ_model_loader:
             'diffusion_dtype': diffusion_dtype,
             'vae_dtype': vae_dtype,
             'model': model,
-            'vae': vae
+            'vae': vae,
+            'motion_model' : motion_model
         }
         if not hasattr(self, 'model') or self.model == None or custom_config != self.current_config:
             pbar = comfy.utils.ProgressBar(7)
@@ -239,7 +244,13 @@ class champ_model_loader:
             denoising_unet = UNet3DConditionModel(**ad_unet_config)
             denoising_unet.load_state_dict(converted_unet, strict=False)
             pbar.update(1)
-            motion_state_dict = torch.load(motion_module_path, map_location="cpu", weights_only=True)
+
+            if motion_model is not None:
+                motion_state_dict = motion_model.model.state_dict()
+                if motion_model.model.mm_info.mm_format == "AnimateLCM":
+                    motion_state_dict = {k: v for k, v in motion_state_dict.items() if "pos_encoder" not in k}
+            else:
+                motion_state_dict = torch.load(motion_module_path, map_location="cpu", weights_only=True)
             pbar.update(1)
             denoising_unet.load_state_dict(motion_state_dict, strict=False)
             del motion_state_dict
