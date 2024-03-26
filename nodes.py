@@ -9,7 +9,7 @@ import numpy as np
 import torch
 import torch.utils.checkpoint
 from torchvision import transforms
-from diffusers import AutoencoderKL, DDIMScheduler
+from diffusers import AutoencoderKL, DDIMScheduler, LCMScheduler, DDPMScheduler, DEISMultistepScheduler, PNDMScheduler
 from contextlib import contextmanager, nullcontext
 from omegaconf import OmegaConf
 from PIL import Image
@@ -324,6 +324,18 @@ class champ_sampler:
             "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
             "keep_model_loaded": ("BOOLEAN", {"default": True}),
             },
+            "optional":{
+            "scheduler": (
+                [
+                    'DDIMScheduler',
+                    'DDPMScheduler',
+                    'LCMScheduler',
+                    'PNDMScheduler',
+                    'DEISMultistepScheduler'
+                ], {
+                    "default": 'DDIMScheduler'
+                }),
+            }
     
         }
 
@@ -332,7 +344,8 @@ class champ_sampler:
     FUNCTION = "process"
     CATEGORY = "champWrapper"
 
-    def process(self, champ_model, champ_vae, champ_encoder, image, depth_tensors, normal_tensors, semantic_tensors, dwpose_tensors, width, height, guidance_scale, steps, seed, keep_model_loaded, frames):
+    def process(self, champ_model, champ_vae, champ_encoder, image, depth_tensors, normal_tensors, semantic_tensors, dwpose_tensors, width, height, 
+                guidance_scale, steps, seed, keep_model_loaded, frames, scheduler='DDIMScheduler'):
         device = mm.get_torch_device()
         mm.unload_all_models()
         mm.soft_empty_cache()
@@ -354,9 +367,25 @@ class champ_sampler:
                 timestep_spacing="trailing",
                 prediction_type="v_prediction",
             )
-        noise_scheduler = DDIMScheduler(**sched_kwargs)
         sched_kwargs.update({"beta_schedule": "scaled_linear"})
+
+        if scheduler == 'DDIMScheduler':
+            noise_scheduler = DDIMScheduler(**sched_kwargs)
+        elif scheduler == 'DDPMScheduler':
+            noise_scheduler = DDPMScheduler(**sched_kwargs)
+        elif scheduler == 'LCMScheduler':
+            noise_scheduler = LCMScheduler(**sched_kwargs)
+        elif scheduler == 'PNDMScheduler':
+            sched_kwargs.pop("clip_sample", None)
+            sched_kwargs.pop("rescale_betas_zero_snr", None)
+            noise_scheduler = PNDMScheduler(**sched_kwargs)
+        elif scheduler == 'DEISMultistepScheduler':
+            sched_kwargs.pop("clip_sample", None)
+            sched_kwargs.pop("rescale_betas_zero_snr", None)
+            noise_scheduler = DEISMultistepScheduler(**sched_kwargs)
         
+        model.to(device)
+
         autocast_condition = (dtype != torch.float32) and not mm.is_device_mps(device)
         with torch.autocast(mm.get_autocast_device(device), dtype=dtype) if autocast_condition else nullcontext():
             image = image.permute(0, 3, 1, 2).to(dtype).to(device)
@@ -403,7 +432,8 @@ class champ_sampler:
             
             result_video_tensor = result_video_tensor.squeeze(0)
             result_video_tensor = result_video_tensor.permute(1, 2, 3, 0).cpu()
-
+            if not keep_model_loaded:
+                model.to('cpu')
             return (result_video_tensor,)
 def inference(
     cfg,
