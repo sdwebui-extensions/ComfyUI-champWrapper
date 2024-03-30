@@ -1,6 +1,6 @@
 {
-  "last_node_id": 71,
-  "last_link_id": 137,
+  "last_node_id": 84,
+  "last_link_id": 157,
   "nodes": [
     {
       "id": 25,
@@ -16,7 +16,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 24,
+      "order": 28,
       "mode": 0,
       "inputs": [
         {
@@ -114,7 +114,7 @@
       "id": 39,
       "type": "GetNode",
       "pos": [
-        200,
+        210,
         290
       ],
       "size": {
@@ -147,7 +147,7 @@
       "id": 29,
       "type": "GetNode",
       "pos": [
-        220,
+        210,
         380
       ],
       "size": {
@@ -180,7 +180,7 @@
       "id": 26,
       "type": "GetNode",
       "pos": [
-        240,
+        210,
         470
       ],
       "size": {
@@ -213,7 +213,7 @@
       "id": 30,
       "type": "GetNode",
       "pos": [
-        230,
+        210,
         420
       ],
       "size": {
@@ -310,57 +310,6 @@
       "bgcolor": "#3f5159"
     },
     {
-      "id": 12,
-      "type": "DSINE-NormalMapPreprocessor",
-      "pos": [
-        -1460,
-        820
-      ],
-      "size": {
-        "0": 315,
-        "1": 106
-      },
-      "flags": {},
-      "order": 20,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 73,
-          "slot_index": 0
-        },
-        {
-          "name": "resolution",
-          "type": "INT",
-          "link": 60,
-          "widget": {
-            "name": "resolution"
-          },
-          "slot_index": 1
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            72
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "DSINE-NormalMapPreprocessor"
-      },
-      "widgets_values": [
-        60,
-        5,
-        512
-      ]
-    },
-    {
       "id": 48,
       "type": "GetNode",
       "pos": [
@@ -427,209 +376,6 @@
       "bgcolor": "#29699c"
     },
     {
-      "id": 32,
-      "type": "GetNode",
-      "pos": [
-        -384.79020501367165,
-        905.1373224804685
-      ],
-      "size": {
-        "0": 210,
-        "1": 58
-      },
-      "flags": {
-        "collapsed": true
-      },
-      "order": 10,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            55
-          ],
-          "slot_index": 0
-        }
-      ],
-      "title": "Get_InputVideo",
-      "properties": {},
-      "widgets_values": [
-        "InputVideo"
-      ],
-      "color": "#2a363b",
-      "bgcolor": "#3f5159"
-    },
-    {
-      "id": 49,
-      "type": "GetNode",
-      "pos": [
-        -414.79020501367165,
-        955.1373224804685
-      ],
-      "size": {
-        "0": 210,
-        "1": 58
-      },
-      "flags": {
-        "collapsed": true
-      },
-      "order": 11,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "INT",
-          "type": "INT",
-          "links": [
-            76
-          ]
-        }
-      ],
-      "title": "Get_PreprocResolution",
-      "properties": {},
-      "widgets_values": [
-        "PreprocResolution"
-      ],
-      "color": "#1b4669",
-      "bgcolor": "#29699c"
-    },
-    {
-      "id": 43,
-      "type": "SetNode",
-      "pos": [
-        -4.790205013671894,
-        815.1373224804685
-      ],
-      "size": {
-        "0": 210,
-        "1": 58
-      },
-      "flags": {
-        "collapsed": true
-      },
-      "order": 26,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "link": 69
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            79
-          ],
-          "slot_index": 0
-        }
-      ],
-      "title": "Set_Depth",
-      "properties": {
-        "previousName": "Depth"
-      },
-      "widgets_values": [
-        "Depth"
-      ],
-      "color": "#2a363b",
-      "bgcolor": "#3f5159"
-    },
-    {
-      "id": 9,
-      "type": "DepthAnythingPreprocessor",
-      "pos": [
-        -194.79020501367182,
-        885.1373224804685
-      ],
-      "size": {
-        "0": 315,
-        "1": 82
-      },
-      "flags": {},
-      "order": 19,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 55,
-          "slot_index": 0
-        },
-        {
-          "name": "resolution",
-          "type": "INT",
-          "link": 76,
-          "widget": {
-            "name": "resolution"
-          },
-          "slot_index": 1
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            69
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "DepthAnythingPreprocessor"
-      },
-      "widgets_values": [
-        "depth_anything_vitl14.pth",
-        512
-      ]
-    },
-    {
-      "id": 45,
-      "type": "SetNode",
-      "pos": [
-        -1140,
-        730
-      ],
-      "size": {
-        "0": 210,
-        "1": 58
-      },
-      "flags": {
-        "collapsed": true
-      },
-      "order": 27,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "link": 72
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            74
-          ],
-          "slot_index": 0
-        }
-      ],
-      "title": "Set_Normals",
-      "properties": {
-        "previousName": "Normals"
-      },
-      "widgets_values": [
-        "Normals"
-      ],
-      "color": "#2a363b",
-      "bgcolor": "#3f5159"
-    },
-    {
       "id": 46,
       "type": "GetNode",
       "pos": [
@@ -643,7 +389,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 12,
+      "order": 10,
       "mode": 0,
       "outputs": [
         {
@@ -677,7 +423,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 13,
+      "order": 11,
       "mode": 0,
       "outputs": [
         {
@@ -709,7 +455,7 @@
         "1": 106
       },
       "flags": {},
-      "order": 21,
+      "order": 23,
       "mode": 0,
       "inputs": [
         {
@@ -733,8 +479,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            39,
-            46
+            39
           ],
           "shape": 3,
           "slot_index": 0
@@ -761,7 +506,7 @@
         "1": 110.56214904785156
       },
       "flags": {},
-      "order": 34,
+      "order": 38,
       "mode": 0,
       "inputs": [
         {
@@ -795,7 +540,7 @@
         "1": 198
       },
       "flags": {},
-      "order": 22,
+      "order": 24,
       "mode": 0,
       "inputs": [
         {
@@ -857,7 +602,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 29,
+      "order": 31,
       "mode": 0,
       "inputs": [
         {
@@ -899,7 +644,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 14,
+      "order": 12,
       "mode": 0,
       "outputs": [
         {
@@ -920,130 +665,6 @@
       "bgcolor": "#3f5159"
     },
     {
-      "id": 20,
-      "type": "Robust Video Matting",
-      "pos": [
-        -190,
-        1730
-      ],
-      "size": {
-        "0": 315,
-        "1": 150
-      },
-      "flags": {},
-      "order": 28,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "video_frames",
-          "type": "IMAGE",
-          "link": 46
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": null,
-          "shape": 3
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": [
-            43
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Robust Video Matting"
-      },
-      "widgets_values": [
-        "mobilenetv3",
-        true,
-        "green",
-        4
-      ]
-    },
-    {
-      "id": 24,
-      "type": "InvertMask",
-      "pos": [
-        180,
-        1760
-      ],
-      "size": {
-        "0": 210,
-        "1": 26
-      },
-      "flags": {
-        "collapsed": true
-      },
-      "order": 37,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "mask",
-          "type": "MASK",
-          "link": 43
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": [
-            44
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "InvertMask"
-      }
-    },
-    {
-      "id": 23,
-      "type": "EmptyImage",
-      "pos": [
-        150,
-        1610
-      ],
-      "size": {
-        "0": 315,
-        "1": 130
-      },
-      "flags": {
-        "collapsed": true
-      },
-      "order": 15,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            42
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "EmptyImage"
-      },
-      "widgets_values": [
-        512,
-        512,
-        1,
-        0
-      ]
-    },
-    {
       "id": 38,
       "type": "SetNode",
       "pos": [
@@ -1057,7 +678,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 43,
+      "order": 40,
       "mode": 0,
       "inputs": [
         {
@@ -1099,7 +720,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 32,
+      "order": 36,
       "mode": 0,
       "inputs": [
         {
@@ -1159,7 +780,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 39,
+      "order": 44,
       "mode": 0,
       "inputs": [
         {
@@ -1199,7 +820,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 30,
+      "order": 34,
       "mode": 0,
       "inputs": [
         {
@@ -1239,7 +860,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 33,
+      "order": 37,
       "mode": 0,
       "inputs": [
         {
@@ -1281,7 +902,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 31,
+      "order": 35,
       "mode": 0,
       "inputs": [
         {
@@ -1310,209 +931,18 @@
       "bgcolor": "#29699c"
     },
     {
-      "id": 22,
-      "type": "ImageCompositeMasked",
-      "pos": [
-        350,
-        1540
-      ],
-      "size": {
-        "0": 315,
-        "1": 146
-      },
-      "flags": {},
-      "order": 41,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "destination",
-          "type": "IMAGE",
-          "link": 39
-        },
-        {
-          "name": "source",
-          "type": "IMAGE",
-          "link": 42
-        },
-        {
-          "name": "mask",
-          "type": "MASK",
-          "link": 44
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            63
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ImageCompositeMasked"
-      },
-      "widgets_values": [
-        0,
-        0,
-        true
-      ]
-    },
-    {
-      "id": 17,
-      "type": "ImageResize+",
-      "pos": [
-        -934,
-        -203
-      ],
-      "size": {
-        "0": 315,
-        "1": 218
-      },
-      "flags": {},
-      "order": 23,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 80
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            33,
-            81
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "width",
-          "type": "INT",
-          "links": [
-            31,
-            50
-          ],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "height",
-          "type": "INT",
-          "links": [
-            32,
-            51
-          ],
-          "shape": 3,
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ImageResize+"
-      },
-      "widgets_values": [
-        512,
-        512,
-        "lanczos",
-        false,
-        "always",
-        32
-      ]
-    },
-    {
-      "id": 11,
-      "type": "VHS_LoadVideo",
-      "pos": [
-        -1410,
-        -10
-      ],
-      "size": [
-        390,
-        554.3125
-      ],
-      "flags": {},
-      "order": 16,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "batch_manager",
-          "type": "VHS_BatchManager",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            80
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "frame_count",
-          "type": "INT",
-          "links": [
-            47
-          ],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "audio",
-          "type": "VHS_AUDIO",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VHS_LoadVideo"
-      },
-      "widgets_values": {
-        "video": "travolta.gif",
-        "force_rate": 0,
-        "force_size": "Disabled",
-        "custom_width": 512,
-        "custom_height": 512,
-        "frame_load_cap": 0,
-        "skip_first_frames": 0,
-        "select_every_nth": 1,
-        "choose video to upload": "image",
-        "videopreview": {
-          "hidden": false,
-          "paused": false,
-          "params": {
-            "frame_load_cap": 0,
-            "skip_first_frames": 0,
-            "force_rate": 0,
-            "filename": "travolta.gif",
-            "type": "input",
-            "format": "image/gif",
-            "select_every_nth": 1
-          }
-        }
-      }
-    },
-    {
       "id": 52,
       "type": "ImageResize+",
       "pos": [
         -205,
         -70
       ],
-      "size": [
-        315,
-        218
-      ],
+      "size": {
+        "0": 315,
+        "1": 218
+      },
       "flags": {},
-      "order": 40,
+      "order": 45,
       "mode": 0,
       "inputs": [
         {
@@ -1588,7 +1018,7 @@
         "1": 98
       },
       "flags": {},
-      "order": 17,
+      "order": 13,
       "mode": 0,
       "outputs": [
         {
@@ -1630,10 +1060,10 @@
         540,
         -295
       ],
-      "size": [
-        414.22687187499514,
-        122
-      ],
+      "size": {
+        "0": 414.22686767578125,
+        "1": 122
+      },
       "flags": {},
       "order": 25,
       "mode": 0,
@@ -1647,6 +1077,11 @@
           "name": "vae",
           "type": "VAE",
           "link": 11
+        },
+        {
+          "name": "motion_model",
+          "type": "MOTION_MODEL_ADE",
+          "link": null
         }
       ],
       "outputs": [
@@ -1687,6 +1122,1138 @@
       ]
     },
     {
+      "id": 19,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        370,
+        1740
+      ],
+      "size": [
+        362.4071044921875,
+        431.73747762044275
+      ],
+      "flags": {},
+      "order": 47,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 64,
+          "slot_index": 0
+        },
+        {
+          "name": "audio",
+          "type": "VHS_AUDIO",
+          "link": null
+        },
+        {
+          "name": "batch_manager",
+          "type": "VHS_BatchManager",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "DensePose",
+        "format": "image/webp",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "DensePose_00011.webp",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/webp"
+          }
+        }
+      }
+    },
+    {
+      "id": 60,
+      "type": "LoadImage",
+      "pos": [
+        -600,
+        159
+      ],
+      "size": {
+        "0": 326.02978515625,
+        "1": 402.1604919433594
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            102
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "title": "Load Image: Reference",
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "robo (1).png",
+        "image"
+      ]
+    },
+    {
+      "id": 22,
+      "type": "ImageCompositeMasked",
+      "pos": [
+        350,
+        1540
+      ],
+      "size": {
+        "0": 315,
+        "1": 146
+      },
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "IMAGE",
+          "link": 39
+        },
+        {
+          "name": "source",
+          "type": "IMAGE",
+          "link": 42
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 142
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            63
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageCompositeMasked"
+      },
+      "widgets_values": [
+        0,
+        0,
+        true
+      ]
+    },
+    {
+      "id": 75,
+      "type": "GetNode",
+      "pos": [
+        187,
+        1673
+      ],
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 15,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            142
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Get_Mask",
+      "properties": {},
+      "widgets_values": [
+        "Mask"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 12,
+      "type": "DSINE-NormalMapPreprocessor",
+      "pos": [
+        -1460,
+        820
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 73,
+          "slot_index": 0
+        },
+        {
+          "name": "resolution",
+          "type": "INT",
+          "link": 60,
+          "widget": {
+            "name": "resolution"
+          },
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            144
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DSINE-NormalMapPreprocessor"
+      },
+      "widgets_values": [
+        60,
+        5,
+        512
+      ]
+    },
+    {
+      "id": 23,
+      "type": "EmptyImage",
+      "pos": [
+        150,
+        1610
+      ],
+      "size": {
+        "0": 315,
+        "1": 130
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            42
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyImage"
+      },
+      "widgets_values": [
+        512,
+        512,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 77,
+      "type": "EmptyImage",
+      "pos": [
+        -1660,
+        1070
+      ],
+      "size": {
+        "0": 315,
+        "1": 130
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 17,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            145
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyImage"
+      },
+      "widgets_values": [
+        512,
+        512,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 76,
+      "type": "GetNode",
+      "pos": [
+        -1640,
+        1130
+      ],
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 18,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            143
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Get_Mask",
+      "properties": {},
+      "widgets_values": [
+        "Mask"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 73,
+      "type": "ImageCompositeMasked",
+      "pos": [
+        -1470,
+        1040
+      ],
+      "size": {
+        "0": 315,
+        "1": 146
+      },
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "IMAGE",
+          "link": 144
+        },
+        {
+          "name": "source",
+          "type": "IMAGE",
+          "link": 145,
+          "slot_index": 1
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 143,
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            146
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageCompositeMasked"
+      },
+      "widgets_values": [
+        0,
+        0,
+        true
+      ]
+    },
+    {
+      "id": 45,
+      "type": "SetNode",
+      "pos": [
+        -1106,
+        964
+      ],
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 39,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 146
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            74
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Set_Normals",
+      "properties": {
+        "previousName": "Normals"
+      },
+      "widgets_values": [
+        "Normals"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 9,
+      "type": "DepthAnythingPreprocessor",
+      "pos": [
+        -99,
+        749
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 55,
+          "slot_index": 0
+        },
+        {
+          "name": "resolution",
+          "type": "INT",
+          "link": 76,
+          "widget": {
+            "name": "resolution"
+          },
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            69,
+            139
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DepthAnythingPreprocessor"
+      },
+      "widgets_values": [
+        "depth_anything_vitl14.pth",
+        512
+      ]
+    },
+    {
+      "id": 32,
+      "type": "GetNode",
+      "pos": [
+        -294,
+        776
+      ],
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 19,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            55
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Get_InputVideo",
+      "properties": {},
+      "widgets_values": [
+        "InputVideo"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 49,
+      "type": "GetNode",
+      "pos": [
+        -318,
+        830
+      ],
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 20,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            76
+          ]
+        }
+      ],
+      "title": "Get_PreprocResolution",
+      "properties": {},
+      "widgets_values": [
+        "PreprocResolution"
+      ],
+      "color": "#1b4669",
+      "bgcolor": "#29699c"
+    },
+    {
+      "id": 47,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        -933,
+        746
+      ],
+      "size": [
+        385.4848327636719,
+        445.1994857788086
+      ],
+      "flags": {},
+      "order": 46,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 74,
+          "slot_index": 0
+        },
+        {
+          "name": "audio",
+          "type": "VHS_AUDIO",
+          "link": null
+        },
+        {
+          "name": "batch_manager",
+          "type": "VHS_BatchManager",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "DWPose",
+        "format": "image/webp",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "DWPose_00029.webp",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/webp"
+          }
+        }
+      }
+    },
+    {
+      "id": 41,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        -1074,
+        1612
+      ],
+      "size": [
+        370.3553771972656,
+        436.3739700317383
+      ],
+      "flags": {},
+      "order": 41,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 67,
+          "slot_index": 0
+        },
+        {
+          "name": "audio",
+          "type": "VHS_AUDIO",
+          "link": null
+        },
+        {
+          "name": "batch_manager",
+          "type": "VHS_BatchManager",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "DWPose",
+        "format": "image/webp",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "DWPose_00026.webp",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/webp"
+          }
+        }
+      }
+    },
+    {
+      "id": 72,
+      "type": "RemapImageRange",
+      "pos": [
+        -342,
+        986
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 139
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            151
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RemapImageRange"
+      },
+      "widgets_values": [
+        -0.99,
+        1.71,
+        true
+      ]
+    },
+    {
+      "id": 80,
+      "type": "ImageColorToMask",
+      "pos": [
+        -343,
+        1157
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 43,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 151,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            154
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageColorToMask"
+      },
+      "widgets_values": [
+        0
+      ]
+    },
+    {
+      "id": 7,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1096,
+        -509
+      ],
+      "size": [
+        758.9707641601562,
+        1066.9707641601562
+      ],
+      "flags": {},
+      "order": 51,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        },
+        {
+          "name": "audio",
+          "type": "VHS_AUDIO",
+          "link": null
+        },
+        {
+          "name": "batch_manager",
+          "type": "VHS_BatchManager",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/nvenc_h264-mp4",
+        "pix_fmt": "yuv420p",
+        "bitrate": 10,
+        "megabit": true,
+        "save_metadata": true,
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00021.mp4",
+            "subfolder": "",
+            "type": "temp",
+            "format": "video/nvenc_h264-mp4"
+          }
+        }
+      }
+    },
+    {
+      "id": 43,
+      "type": "SetNode",
+      "pos": [
+        289,
+        769
+      ],
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 69
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            79
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Set_Depth",
+      "properties": {
+        "previousName": "Depth"
+      },
+      "widgets_values": [
+        "Depth"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 74,
+      "type": "SetNode",
+      "pos": [
+        136,
+        1304
+      ],
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 50,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "link": 157,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            155
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Set_Mask",
+      "properties": {
+        "previousName": "Mask"
+      },
+      "widgets_values": [
+        "Mask"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 84,
+      "type": "MaskToImage",
+      "pos": [
+        301,
+        1323
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 52,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 155
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            156
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      }
+    },
+    {
+      "id": 42,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        524,
+        711
+      ],
+      "size": [
+        397.4945068359375,
+        452.20512898763025
+      ],
+      "flags": {},
+      "order": 42,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 79,
+          "slot_index": 0
+        },
+        {
+          "name": "audio",
+          "type": "VHS_AUDIO",
+          "link": null
+        },
+        {
+          "name": "batch_manager",
+          "type": "VHS_BatchManager",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "DWPose",
+        "format": "image/webp",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "DWPose_00027.webp",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/webp"
+          }
+        }
+      }
+    },
+    {
+      "id": 78,
+      "type": "GrowMaskWithBlur",
+      "pos": [
+        5,
+        992
+      ],
+      "size": {
+        "0": 315,
+        "1": 222
+      },
+      "flags": {},
+      "order": 48,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 154,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            157
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask_inverted",
+          "type": "MASK",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GrowMaskWithBlur"
+      },
+      "widgets_values": [
+        0,
+        0,
+        true,
+        false,
+        1.4000000000000001,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 83,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        960,
+        718
+      ],
+      "size": [
+        397.4945068359375,
+        452.20512898763025
+      ],
+      "flags": {},
+      "order": 53,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 156,
+          "slot_index": 0
+        },
+        {
+          "name": "audio",
+          "type": "VHS_AUDIO",
+          "link": null
+        },
+        {
+          "name": "batch_manager",
+          "type": "VHS_BatchManager",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "DWPose",
+        "format": "image/webp",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "DWPose_00028.webp",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/webp"
+          }
+        }
+      }
+    },
+    {
       "id": 2,
       "type": "champ_sampler",
       "pos": [
@@ -1695,10 +2262,10 @@
       ],
       "size": {
         "0": 387,
-        "1": 366
+        "1": 378
       },
       "flags": {},
-      "order": 42,
+      "order": 49,
       "mode": 0,
       "inputs": [
         {
@@ -1801,360 +2368,148 @@
         16,
         77,
         "fixed",
-        10
+        10,
+        "DDIMScheduler"
       ]
     },
     {
-      "id": 47,
-      "type": "VHS_VideoCombine",
+      "id": 11,
+      "type": "VHS_LoadVideo",
       "pos": [
-        -933,
-        746
+        -1410,
+        -10
       ],
       "size": [
-        385.48481983218676,
-        597.4848022460938
+        390,
+        489.53960396039605
       ],
       "flags": {},
-      "order": 36,
+      "order": 21,
       "mode": 0,
       "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 74,
-          "slot_index": 0
-        },
-        {
-          "name": "audio",
-          "type": "VHS_AUDIO",
-          "link": null
-        },
         {
           "name": "batch_manager",
           "type": "VHS_BatchManager",
           "link": null
         }
       ],
-      "outputs": [
-        {
-          "name": "Filenames",
-          "type": "VHS_FILENAMES",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VHS_VideoCombine"
-      },
-      "widgets_values": {
-        "frame_rate": 1,
-        "loop_count": 0,
-        "filename_prefix": "DWPose",
-        "format": "image/webp",
-        "pingpong": false,
-        "save_output": false,
-        "videopreview": {
-          "hidden": false,
-          "paused": false,
-          "params": {
-            "filename": "DWPose_00003.webp",
-            "subfolder": "",
-            "type": "temp",
-            "format": "image/webp"
-          }
-        }
-      }
-    },
-    {
-      "id": 42,
-      "type": "VHS_VideoCombine",
-      "pos": [
-        191,
-        734
-      ],
-      "size": [
-        397.4945170221863,
-        609.4945068359375
-      ],
-      "flags": {},
-      "order": 35,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 79,
-          "slot_index": 0
-        },
-        {
-          "name": "audio",
-          "type": "VHS_AUDIO",
-          "link": null
-        },
-        {
-          "name": "batch_manager",
-          "type": "VHS_BatchManager",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "Filenames",
-          "type": "VHS_FILENAMES",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VHS_VideoCombine"
-      },
-      "widgets_values": {
-        "frame_rate": 1,
-        "loop_count": 0,
-        "filename_prefix": "DWPose",
-        "format": "image/webp",
-        "pingpong": false,
-        "save_output": false,
-        "videopreview": {
-          "hidden": false,
-          "paused": false,
-          "params": {
-            "filename": "DWPose_00002.webp",
-            "subfolder": "",
-            "type": "temp",
-            "format": "image/webp"
-          }
-        }
-      }
-    },
-    {
-      "id": 41,
-      "type": "VHS_VideoCombine",
-      "pos": [
-        -1074,
-        1612
-      ],
-      "size": [
-        370.3553790035139,
-        582.3554077148438
-      ],
-      "flags": {},
-      "order": 38,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 67,
-          "slot_index": 0
-        },
-        {
-          "name": "audio",
-          "type": "VHS_AUDIO",
-          "link": null
-        },
-        {
-          "name": "batch_manager",
-          "type": "VHS_BatchManager",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "Filenames",
-          "type": "VHS_FILENAMES",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VHS_VideoCombine"
-      },
-      "widgets_values": {
-        "frame_rate": 1,
-        "loop_count": 0,
-        "filename_prefix": "DWPose",
-        "format": "image/webp",
-        "pingpong": false,
-        "save_output": false,
-        "videopreview": {
-          "hidden": false,
-          "paused": false,
-          "params": {
-            "filename": "DWPose_00001.webp",
-            "subfolder": "",
-            "type": "temp",
-            "format": "image/webp"
-          }
-        }
-      }
-    },
-    {
-      "id": 19,
-      "type": "VHS_VideoCombine",
-      "pos": [
-        370,
-        1740
-      ],
-      "size": [
-        362.40710895968596,
-        574.4071044921875
-      ],
-      "flags": {},
-      "order": 45,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 64,
-          "slot_index": 0
-        },
-        {
-          "name": "audio",
-          "type": "VHS_AUDIO",
-          "link": null
-        },
-        {
-          "name": "batch_manager",
-          "type": "VHS_BatchManager",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "Filenames",
-          "type": "VHS_FILENAMES",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VHS_VideoCombine"
-      },
-      "widgets_values": {
-        "frame_rate": 8,
-        "loop_count": 0,
-        "filename_prefix": "DensePose",
-        "format": "image/webp",
-        "pingpong": false,
-        "save_output": false,
-        "videopreview": {
-          "hidden": false,
-          "paused": false,
-          "params": {
-            "filename": "DensePose_00001.webp",
-            "subfolder": "",
-            "type": "temp",
-            "format": "image/webp"
-          }
-        }
-      }
-    },
-    {
-      "id": 7,
-      "type": "VHS_VideoCombine",
-      "pos": [
-        907,
-        -87
-      ],
-      "size": [
-        758.9707744078032,
-        314
-      ],
-      "flags": {},
-      "order": 44,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 9
-        },
-        {
-          "name": "audio",
-          "type": "VHS_AUDIO",
-          "link": null
-        },
-        {
-          "name": "batch_manager",
-          "type": "VHS_BatchManager",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "Filenames",
-          "type": "VHS_FILENAMES",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VHS_VideoCombine"
-      },
-      "widgets_values": {
-        "frame_rate": 24,
-        "loop_count": 0,
-        "filename_prefix": "AnimateDiff",
-        "format": "video/nvenc_h264-mp4",
-        "pix_fmt": "yuv420p",
-        "bitrate": 10,
-        "megabit": true,
-        "save_metadata": true,
-        "pingpong": false,
-        "save_output": false,
-        "videopreview": {
-          "hidden": false,
-          "paused": false,
-          "params": {
-            "filename": "AnimateDiff_00010.mp4",
-            "subfolder": "",
-            "type": "temp",
-            "format": "video/nvenc_h264-mp4"
-          }
-        }
-      }
-    },
-    {
-      "id": 60,
-      "type": "LoadImage",
-      "pos": [
-        -600,
-        159
-      ],
-      "size": [
-        326.02978417968257,
-        402.1604812988255
-      ],
-      "flags": {},
-      "order": 18,
-      "mode": 0,
       "outputs": [
         {
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            102
+            80
           ],
           "shape": 3,
           "slot_index": 0
         },
         {
-          "name": "MASK",
-          "type": "MASK",
+          "name": "frame_count",
+          "type": "INT",
+          "links": [
+            47
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "audio",
+          "type": "VHS_AUDIO",
           "links": null,
           "shape": 3
         }
       ],
-      "title": "Load Image: Reference",
       "properties": {
-        "Node name for S&R": "LoadImage"
+        "Node name for S&R": "VHS_LoadVideo"
+      },
+      "widgets_values": {
+        "video": "rick.mp4",
+        "force_rate": 0,
+        "force_size": "Disabled",
+        "custom_width": 512,
+        "custom_height": 512,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "choose video to upload": "image",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "frame_load_cap": 0,
+            "skip_first_frames": 0,
+            "force_rate": 0,
+            "filename": "rick.mp4",
+            "type": "input",
+            "format": "video/mp4",
+            "select_every_nth": 1
+          }
+        }
+      }
+    },
+    {
+      "id": 17,
+      "type": "ImageResize+",
+      "pos": [
+        -934,
+        -203
+      ],
+      "size": {
+        "0": 315,
+        "1": 218
+      },
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 80
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            33,
+            81
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            31,
+            50
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            32,
+            51
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageResize+"
       },
       "widgets_values": [
-        "robo (1).png",
-        "image"
+        768,
+        448,
+        "lanczos",
+        false,
+        "always",
+        32
       ]
     }
   ],
@@ -2245,30 +2600,6 @@
       0,
       22,
       1,
-      "IMAGE"
-    ],
-    [
-      43,
-      20,
-      1,
-      24,
-      0,
-      "MASK"
-    ],
-    [
-      44,
-      24,
-      0,
-      22,
-      2,
-      "MASK"
-    ],
-    [
-      46,
-      13,
-      0,
-      20,
-      0,
       "IMAGE"
     ],
     [
@@ -2396,14 +2727,6 @@
       9,
       0,
       43,
-      0,
-      "*"
-    ],
-    [
-      72,
-      12,
-      0,
-      45,
       0,
       "*"
     ],
@@ -2542,6 +2865,94 @@
       2,
       10,
       "INT"
+    ],
+    [
+      139,
+      9,
+      0,
+      72,
+      0,
+      "IMAGE"
+    ],
+    [
+      142,
+      75,
+      0,
+      22,
+      2,
+      "MASK"
+    ],
+    [
+      143,
+      76,
+      0,
+      73,
+      2,
+      "MASK"
+    ],
+    [
+      144,
+      12,
+      0,
+      73,
+      0,
+      "IMAGE"
+    ],
+    [
+      145,
+      77,
+      0,
+      73,
+      1,
+      "IMAGE"
+    ],
+    [
+      146,
+      73,
+      0,
+      45,
+      0,
+      "IMAGE"
+    ],
+    [
+      151,
+      72,
+      0,
+      80,
+      0,
+      "IMAGE"
+    ],
+    [
+      154,
+      80,
+      0,
+      78,
+      0,
+      "MASK"
+    ],
+    [
+      155,
+      74,
+      0,
+      84,
+      0,
+      "MASK"
+    ],
+    [
+      156,
+      84,
+      0,
+      83,
+      0,
+      "IMAGE"
+    ],
+    [
+      157,
+      78,
+      0,
+      74,
+      0,
+      "MASK"
     ]
   ],
   "groups": [
@@ -2550,8 +2961,8 @@
       "bounding": [
         -480,
         639,
-        1233,
-        740
+        2261,
+        749
       ],
       "color": "#3f789e",
       "font_size": 24,
@@ -2574,8 +2985,8 @@
       "bounding": [
         -1708,
         1401,
-        1215,
-        814
+        1219,
+        951
       ],
       "color": "#3f789e",
       "font_size": 24,
