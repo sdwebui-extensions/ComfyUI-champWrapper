@@ -9,7 +9,7 @@ import numpy as np
 import torch
 import torch.utils.checkpoint
 from torchvision import transforms
-from diffusers import AutoencoderKL, DDIMScheduler, LCMScheduler, DDPMScheduler, DEISMultistepScheduler, PNDMScheduler
+from diffusers import AutoencoderKL, DDIMScheduler, LCMScheduler, DDPMScheduler, DEISMultistepScheduler, PNDMScheduler, DPMSolverMultistepScheduler
 from contextlib import contextmanager, nullcontext
 from omegaconf import OmegaConf
 from PIL import Image
@@ -323,7 +323,8 @@ class champ_sampler:
                     'DDPMScheduler',
                     'LCMScheduler',
                     'PNDMScheduler',
-                    'DEISMultistepScheduler'
+                    'DEISMultistepScheduler',
+                    'DPMSolverMultistepScheduler',
                 ], {
                     "default": 'DDIMScheduler'
                 }),
@@ -375,6 +376,12 @@ class champ_sampler:
             sched_kwargs.pop("clip_sample", None)
             sched_kwargs.pop("rescale_betas_zero_snr", None)
             noise_scheduler = DEISMultistepScheduler(**sched_kwargs)
+        elif scheduler == 'DPMSolverMultistepScheduler':
+            sched_kwargs.pop("clip_sample", None)
+            sched_kwargs.pop("rescale_betas_zero_snr", None)
+            sched_kwargs.update({"algorithm_type": "sde-dpmsolver++"})
+            sched_kwargs.update({"use_karras_sigmas": "True"})
+            noise_scheduler = DPMSolverMultistepScheduler(**sched_kwargs)
         
         model.to(device)
 
