@@ -364,6 +364,7 @@ class MultiGuidance2LongVideoPipeline(DiffusionPipeline):
         context_overlap=4,
         context_batch_size=1,
         interpolation_factor=1,
+        style_fidelity=1.0,
         **kwargs,
     ):
         # Default height and width to unet
@@ -408,6 +409,7 @@ class MultiGuidance2LongVideoPipeline(DiffusionPipeline):
             mode="read",
             batch_size=batch_size,
             fusion_blocks="full",
+            style_fidelity=style_fidelity,
         )
 
         num_channels_latents = self.denoising_unet.config.in_channels

@@ -28,6 +28,12 @@ import comfy.model_management as mm
 import comfy.utils
 import folder_paths
 
+from contextlib import nullcontext
+from diffusers.utils import is_accelerate_available
+if is_accelerate_available():
+    from accelerate import init_empty_weights
+    from accelerate.utils import set_module_tensor_to_device
+
 def convert_dtype(dtype_str):
     if dtype_str == 'fp32':
         return torch.float32
@@ -212,8 +218,13 @@ class champ_model_loader:
             # 1. vae
             converted_vae_config = create_vae_diffusers_config(original_config, image_size=512)
             converted_vae = convert_ldm_vae_checkpoint(sd, converted_vae_config)
-            self.vae = AutoencoderKL(**converted_vae_config)
-            self.vae.load_state_dict(converted_vae, strict=False)
+            with (init_empty_weights() if is_accelerate_available() else nullcontext()):
+                self.vae = AutoencoderKL(**converted_vae_config)
+            if is_accelerate_available():
+                for key in converted_vae:
+                    set_module_tensor_to_device(self.vae, key, device=device, dtype=dtype, value=converted_vae[key])
+            else:
+                self.vae.load_state_dict(converted_vae, strict=False)
             if vae_dtype == "auto":
                 try:
                     if mm.should_use_bf16():
@@ -328,6 +339,9 @@ class champ_sampler:
                 ], {
                     "default": 'DDIMScheduler'
                 }),
+            },
+            "optional": {
+                "style_fidelity": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 10.0, "step": 0.01}),
             }
     
         }
@@ -338,7 +352,8 @@ class champ_sampler:
     CATEGORY = "champWrapper"
 
     def process(self, champ_model, champ_vae, champ_encoder, image, width, height, 
-                guidance_scale, steps, seed, keep_model_loaded, frames, depth_tensors=None, normal_tensors=None, semantic_tensors=None, dwpose_tensors=None, scheduler='DDIMScheduler'):
+                guidance_scale, steps, seed, keep_model_loaded, frames, style_fidelity=1.0,
+                depth_tensors=None, normal_tensors=None, semantic_tensors=None, dwpose_tensors=None, scheduler='DDIMScheduler'):
         device = mm.get_torch_device()
         mm.unload_all_models()
         mm.soft_empty_cache()
@@ -427,7 +442,8 @@ class champ_sampler:
                 width=width, height=height,
                 num_inference_steps=steps,
                 guidance_scale=guidance_scale,
-                device=device, dtype=dtype
+                device=device, dtype=dtype,
+                style_fidelity=style_fidelity
             )  # (1, c, f, h, w)
             
             result_video_tensor = result_video_tensor.squeeze(0)
@@ -449,7 +465,8 @@ def inference(
     num_inference_steps,
     guidance_scale,
     dtype,
-    device
+    device,
+    style_fidelity
 ):
     reference_unet = model.reference_unet
     denoising_unet = model.denoising_unet
@@ -476,7 +493,8 @@ def inference(
         video_length,
         num_inference_steps=num_inference_steps,
         guidance_scale=guidance_scale,
-        generator=generator
+        generator=generator,
+        style_fidelity=style_fidelity,
     ).videos
     
     del pipeline

@@ -186,6 +186,8 @@ class ReferenceAttentionControl:
                         hidden_states = hidden_states_c.clone()
                     else:
                         hidden_states = hidden_states_uc
+                    
+                    hidden_states = style_fidelity * hidden_states_c + (1.0 - style_fidelity) * hidden_states_uc
 
                     # self.bank.clear()
                     if self.attn2 is not None:
