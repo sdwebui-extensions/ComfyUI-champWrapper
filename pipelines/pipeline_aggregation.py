@@ -364,6 +364,8 @@ class MultiGuidance2LongVideoPipeline(DiffusionPipeline):
         context_overlap=4,
         context_batch_size=1,
         interpolation_factor=1,
+        start_at_step=0,
+        latent_image=None,
         style_fidelity=1.0,
         **kwargs,
     ):
@@ -378,7 +380,7 @@ class MultiGuidance2LongVideoPipeline(DiffusionPipeline):
         # Prepare timesteps
         self.scheduler.set_timesteps(num_inference_steps, device=device)
         timesteps = self.scheduler.timesteps
-
+        timesteps = timesteps[start_at_step:]
         batch_size = 1
 
         # Prepare clip image embeds
@@ -426,6 +428,12 @@ class MultiGuidance2LongVideoPipeline(DiffusionPipeline):
 
         # Prepare extra step kwargs.
         extra_step_kwargs = self.prepare_extra_step_kwargs(generator, eta)
+
+        if latent_image and start_at_step > 0:
+            latent_timestep = timesteps[:1].repeat(batch_size * num_images_per_prompt)
+            init_latent_image = latent_image['samples'].to(latents.device).unsqueeze(0)* 0.18215
+            init_latent_image = init_latent_image.permute(0, 2, 1, 3, 4)
+            latents = self.scheduler.add_noise(init_latent_image, latents, latent_timestep)
 
         # Prepare ref image latents
         ref_image_tensor = self.ref_image_processor.preprocess(
