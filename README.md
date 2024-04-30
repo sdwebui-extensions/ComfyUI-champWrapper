@@ -1,5 +1,4 @@
 # ComfyUI wrapper node for "champ"
-## WORK IN PROGRESS
 
 ![image](https://github.com/kijai/ComfyUI-champWrapper/assets/40791699/cacc7067-19ec-4292-a809-7f3a2b660d1c)
 
