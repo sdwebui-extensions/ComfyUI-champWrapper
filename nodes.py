@@ -1,39 +1,54 @@
-import argparse
-import logging
 import os
 import os.path as osp
 from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-import torch
-import torch.utils.checkpoint
-from torchvision import transforms
-from diffusers import AutoencoderKL, DDIMScheduler, LCMScheduler, DDPMScheduler, DEISMultistepScheduler, PNDMScheduler, DPMSolverMultistepScheduler
-from contextlib import contextmanager, nullcontext
-from omegaconf import OmegaConf
 from PIL import Image
-from transformers import CLIPVisionModelWithProjection
-from torchvision.transforms import ToPILImage
-from .models.unet_2d_condition import UNet2DConditionModel
-from .models.unet_3d import UNet3DConditionModel
-from .models.mutual_self_attention import ReferenceAttentionControl
-from .models.guidance_encoder import GuidanceEncoder
-from .models.champ_model import ChampModel
+import torch
 import torch.nn.functional as F
-from .pipelines.pipeline_aggregation import MultiGuidance2LongVideoPipeline
-
-from .utils.video_utils import resize_tensor_frames, save_videos_grid, pil_list_to_tensor
-import comfy.model_management as mm
-import comfy.utils
-import folder_paths
-
+from torchvision.transforms import ToPILImage
 from contextlib import nullcontext
+from omegaconf import OmegaConf
+
+from transformers import CLIPVisionModelWithProjection
+
+try:
+    from diffusers import (
+        DDIMScheduler,
+        DPMSolverMultistepScheduler, 
+        AutoencoderKL, 
+        UNet2DConditionModel, 
+        LCMScheduler, 
+        DDPMScheduler, 
+        DEISMultistepScheduler, 
+        PNDMScheduler,
+        UniPCMultistepScheduler
+    )
+    from diffusers.loaders.single_file_utils import (
+        convert_ldm_vae_checkpoint, 
+        convert_ldm_unet_checkpoint, 
+        create_vae_diffusers_config, 
+        create_unet_diffusers_config,
+    )     
+except:
+    raise ImportError("Diffusers version too old. Please update to 0.26.0 minimum.")
 from diffusers.utils import is_accelerate_available
 if is_accelerate_available():
     from accelerate import init_empty_weights
     from accelerate.utils import set_module_tensor_to_device
 
+from .scheduling_tcd import TCDScheduler
+
+from .models.unet_2d_condition import UNet2DConditionModel
+from .models.unet_3d import UNet3DConditionModel
+from .models.mutual_self_attention import ReferenceAttentionControl
+from .models.guidance_encoder import GuidanceEncoder
+from .models.champ_model import ChampModel
+from .pipelines.pipeline_aggregation import MultiGuidance2LongVideoPipeline
+
+import comfy.model_management as mm
+import comfy.utils
 
 def convert_dtype(dtype_str):
     if dtype_str == 'fp32':
@@ -44,16 +59,6 @@ def convert_dtype(dtype_str):
         return torch.bfloat16
     else:
         raise NotImplementedError
-def setup_savedir(cfg):
-    time_str = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
-    if cfg.exp_name is None:
-        savedir = f"results/exp-{time_str}"
-    else:
-        savedir = f"results/{cfg.exp_name}-{time_str}"
-    
-    os.makedirs(savedir, exist_ok=True)
-    
-    return savedir
 
 def setup_guidance_encoder(cfg):
     guidance_encoder_group = dict()
@@ -83,30 +88,6 @@ def process_semantic_map(semantic_map_path: Path):
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
 
-def combine_guidance_data(cfg, max_files_per_type=None):
-    guidance_types = cfg.guidance_types
-    guidance_data_folder = os.path.join(script_directory, "example_data", "motions", "motion-01")
-    guidance_pil_group = dict()
-    for guidance_type in guidance_types:
-        guidance_pil_group[guidance_type] = []
-        for guidance_image_path in sorted(Path(osp.join(guidance_data_folder, guidance_type)).iterdir()):
-            # Add black background to semantic map
-            if guidance_type == "semantic_map":
-                guidance_pil_group[guidance_type] += [process_semantic_map(guidance_image_path)]
-            else:
-                guidance_pil_group[guidance_type] += [Image.open(guidance_image_path).convert("RGB")]
-            
-            # Limit the number of files processed for each guidance type
-            if max_files_per_type is not None and len(guidance_pil_group[guidance_type]) >= max_files_per_type:
-                break
-
-    # get video length from the first guidance sequence
-    first_guidance_length = len(list(guidance_pil_group.values())[0])
-    # ensure all guidance sequences are of equal length
-    assert all(len(sublist) == first_guidance_length for sublist in list(guidance_pil_group.values()))
-    
-    return guidance_pil_group, first_guidance_length
-
 def combine_guidance_data_from_tensors(guidance_tensor_batches):
     guidance_pil_group = {}
     to_pil = ToPILImage()
@@ -114,16 +95,11 @@ def combine_guidance_data_from_tensors(guidance_tensor_batches):
     for guidance_type, tensor_batch in guidance_tensor_batches.items():
         guidance_pil_group[guidance_type] = []
         for i in range(tensor_batch.size(0)):  # Iterate over the batch
-           
             tensor = tensor_batch[i]
-
             # Permute the tensor from B, H, W, C to B, C, H, W
             tensor = tensor.permute(2, 0, 1)
-
-
             # Convert tensor to PIL Image
             pil_image = to_pil(tensor)
-
             # Add the PIL Image to the group
             guidance_pil_group[guidance_type].append(pil_image)
 
@@ -133,7 +109,6 @@ def combine_guidance_data_from_tensors(guidance_tensor_batches):
     assert all(len(sublist) == first_guidance_length for sublist in guidance_pil_group.values())
 
     return guidance_pil_group, first_guidance_length
-
 
 class champ_model_loader:
     @classmethod
@@ -210,9 +185,7 @@ class champ_model_loader:
             denoising_unet_path = os.path.join(script_directory,"checkpoints", "denoising_unet.pth")
             reference_unet_path = os.path.join(script_directory,"checkpoints", "reference_unet.pth")
             motion_module_path = os.path.join(script_directory,"checkpoints", "motion_module.pth")
-            
-            from diffusers.loaders.single_file_utils import (convert_ldm_vae_checkpoint, convert_ldm_unet_checkpoint, create_text_encoder_from_ldm_clip_checkpoint, create_vae_diffusers_config, create_unet_diffusers_config)
-            
+             
             mm.load_model_gpu(model)
             sd = model.model.state_dict_for_saving(None, vae.get_sd(), None)
 
@@ -341,6 +314,8 @@ class champ_sampler:
                     'PNDMScheduler',
                     'DEISMultistepScheduler',
                     'DPMSolverMultistepScheduler',
+                    'UniPCMultistepScheduler',
+                    'TCDScheduler'
                 ], {
                     "default": 'DDIMScheduler'
                 }),
@@ -399,6 +374,12 @@ class champ_sampler:
             sched_kwargs.update({"algorithm_type": "sde-dpmsolver++"})
             sched_kwargs.update({"use_karras_sigmas": "True"})
             noise_scheduler = DPMSolverMultistepScheduler(**sched_kwargs)
+        elif scheduler == 'UniPCMultistepScheduler':
+            sched_kwargs.pop("clip_sample", None)
+            sched_kwargs.pop("rescale_betas_zero_snr", None)
+            noise_scheduler = UniPCMultistepScheduler(**sched_kwargs)
+        elif scheduler == 'TCDScheduler':
+            noise_scheduler = TCDScheduler(**sched_kwargs)        
         
         model.to(device)
 
@@ -417,7 +398,7 @@ class champ_sampler:
            
             B, C, H, W = image.shape
             
-            to_pil = transforms.ToPILImage()
+            to_pil = ToPILImage()
             ref_image_pil = to_pil(image[0])
 
             guidance_tensor_batches = {}
@@ -506,7 +487,7 @@ def inference(
     ).videos
     
     del pipeline
-    torch.cuda.empty_cache()
+    mm.soft_empty_cache()
     
     return video       
 
