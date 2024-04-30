@@ -219,8 +219,7 @@ class champ_model_loader:
             # 1. vae
             converted_vae_config = create_vae_diffusers_config(original_config, image_size=512)
             converted_vae = convert_ldm_vae_checkpoint(sd, converted_vae_config)
-            self.vae = AutoencoderKL(**converted_vae_config)
-            self.vae.load_state_dict(converted_vae, strict=False)
+           
             with (init_empty_weights() if is_accelerate_available() else nullcontext()):
                 self.vae = AutoencoderKL(**converted_vae_config)
             if is_accelerate_available():
