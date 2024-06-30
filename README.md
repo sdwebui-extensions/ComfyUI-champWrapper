@@ -4,11 +4,11 @@
 
 These checkpoints go in the `ComfyUI/custom_nodes/ComfyUI-champWrapper/checkpoints` -folder:
 
-https://drive.google.com/drive/folders/1hZiOHG-qDf0Pj7tvfxC70JQ6wHUvUDoY
+https://huggingface.co/fudan-generative-ai/champ/tree/main/champ
 
 And this model along with it's config go in the `ComfyUI/custom_nodes/ComfyUI-champWrapper/checkpoints/image_encoder`:
 
-https://huggingface.co/lambdalabs/sd-image-variations-diffusers/tree/main/image_encoder
+https://huggingface.co/fudan-generative-ai/champ/tree/main/image_encoder
 
 
 # Original repo:
