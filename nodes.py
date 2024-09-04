@@ -12,6 +12,7 @@ from contextlib import nullcontext
 from omegaconf import OmegaConf
 
 from transformers import CLIPVisionModelWithProjection
+cache_dir = "/stable-diffusion-cache/models/champ"
 
 try:
     from diffusers import (
@@ -185,6 +186,10 @@ class champ_model_loader:
             denoising_unet_path = os.path.join(script_directory,"checkpoints", "denoising_unet.pth")
             reference_unet_path = os.path.join(script_directory,"checkpoints", "reference_unet.pth")
             motion_module_path = os.path.join(script_directory,"checkpoints", "motion_module.pth")
+            if not os.path.exists(denoising_unet_path) and os.path.exists('/stable-diffusion-cache/models/champ'):
+                denoising_unet_path = os.path.join("/stable-diffusion-cache/models/champ","checkpoints", "denoising_unet.pth")
+                reference_unet_path = os.path.join("/stable-diffusion-cache/models/champ","checkpoints", "reference_unet.pth")
+                motion_module_path = os.path.join("/stable-diffusion-cache/models/champ","checkpoints", "motion_module.pth")
              
             mm.load_model_gpu(model)
             sd = model.model.state_dict_for_saving(None, vae.get_sd(), None)
@@ -243,9 +248,13 @@ class champ_model_loader:
             reference_unet.to(dtype).to(device)
             pbar.update(1)
             for guidance_type, guidance_encoder_module in guidance_encoder_group.items():
+                guidance_model_path = os.path.join("/stable-diffusion-cache/models/champ", "checkpoints", f"guidance_encoder_{guidance_type}.pth")
+                local_path = osp.join(script_directory,"checkpoints", f"guidance_encoder_{guidance_type}.pth")
+                if not os.path.exists(local_path) and os.path.exists(guidance_model_path):
+                    local_path = guidance_model_path
                 guidance_encoder_module.load_state_dict(
                     torch.load(
-                        osp.join(script_directory,"checkpoints", f"guidance_encoder_{guidance_type}.pth"),
+                        local_path,
                         map_location="cpu",
                     ),
                     strict=False,
@@ -277,7 +286,10 @@ class champ_model_loader:
                 denoising_unet.enable_xformers_memory_efficient_attention()
 
         if not hasattr(self, 'image_enc') or self.image_enc == None:
-            self.image_enc = CLIPVisionModelWithProjection.from_pretrained(os.path.join(script_directory,"checkpoints", "image_encoder"))
+            local_path = os.path.join(script_directory,"checkpoints", "image_encoder")
+            if not os.path.exists(local_path) and os.path.exists(cache_dir):
+                local_path = os.path.join(cache_dir, "checkpoints", "image_encoder")
+            self.image_enc = CLIPVisionModelWithProjection.from_pretrained(local_path)
             self.image_enc.to(dtype).to(device)
         
    
