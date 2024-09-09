@@ -29,8 +29,8 @@ try:
     from diffusers.loaders.single_file_utils import (
         convert_ldm_vae_checkpoint, 
         convert_ldm_unet_checkpoint, 
-        create_vae_diffusers_config, 
-        create_unet_diffusers_config,
+        create_vae_diffusers_config_from_ldm, 
+        create_unet_diffusers_config_from_ldm,
     )     
 except:
     raise ImportError("Diffusers version too old. Please update to 0.26.0 minimum.")
@@ -195,7 +195,7 @@ class champ_model_loader:
             sd = model.model.state_dict_for_saving(None, vae.get_sd(), None)
 
             # 1. vae
-            converted_vae_config = create_vae_diffusers_config(original_config, image_size=512)
+            converted_vae_config = create_vae_diffusers_config_from_ldm(original_config, sd, image_size=512)
             converted_vae = convert_ldm_vae_checkpoint(sd, converted_vae_config)
            
             with (init_empty_weights() if is_accelerate_available() else nullcontext()):
@@ -219,7 +219,7 @@ class champ_model_loader:
             print(f"VAE using dtype: {self.vae.dtype}")
             pbar.update(1)
             # 2. unet
-            converted_unet_config = create_unet_diffusers_config(original_config, image_size=512)
+            converted_unet_config = create_unet_diffusers_config_from_ldm(original_config, sd, image_size=512)
             converted_unet = convert_ldm_unet_checkpoint(sd, converted_unet_config)
             del sd
             reference_unet = UNet2DConditionModel(**converted_unet_config)
